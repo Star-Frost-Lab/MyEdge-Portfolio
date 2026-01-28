@@ -1,0 +1,32 @@
+# MyEdge Portfolio - Cloudflare Worker 配置
+# 部署命令: npx wrangler deploy
+
+name = "myedge-portfolio"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+# ==================== Workers AI（必须）====================
+# 这个配置会自动绑定 Workers AI 到 env.AI
+#[ai]
+#binding = "AI"
+
+# ==================== Durable Objects ====================
+[durable_objects]
+bindings = [
+  { name = "USER_DO", class_name = "UserDurableObject" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["UserDurableObject"]
+
+# ==================== R2 存储 ====================
+# ⚠️ 重要：必须先创建 R2 bucket，否则部署会失败！
+# 
+# 创建步骤：
+# 1. 运行命令：npx wrangler r2 bucket create myedge-assets
+# 2. 或者在 Dashboard 中创建：R2 > Create bucket > 名称填 "myedge-assets"
+# 3. 然后再运行 wrangler deploy
+#
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "wenjian"
